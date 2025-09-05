@@ -1,14 +1,11 @@
 import NextAuth from "next-auth";
 import { Account, User as AuthUser } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import prisma from "@/utils/db";
 import { nanoid } from "nanoid";
 
-export const authOptions: any = {
-  // Configure one or more authentication providers
+const authOptions: any = {
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -27,77 +24,34 @@ export const authOptions: any = {
 
           if (!user) return null;
 
-          const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password!);
+          const isPasswordCorrect = await bcrypt.compare(
+            credentials.password,
+            user.password!
+          );
           if (!isPasswordCorrect) return null;
 
-          // Retourne utilisateur
           return user;
         } catch (err) {
           console.error("Error in authorize:", err);
           return null;
         }
       },
-
-    })
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_ID ?? "",
-    //   clientSecret: process.env.GITHUB_SECRET ?? "",
-    // }),
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_ID ?? "",
-    //   clientSecret: process.env.GOOGLE_SECRET ?? "",
-    // }),
-    // ...add more providers here if you want. You can find them on nextauth website.
+    }),
+    // Tu pourras réactiver GithubProvider / GoogleProvider plus tard si besoin
   ],
   callbacks: {
     async signIn({ user, account }: { user: AuthUser; account: Account }) {
-      if (account?.provider == "credentials") {
+      if (account?.provider === "credentials") {
         return true;
       }
-      // if (account?.provider == "github") {
-
-      //   try {
-      //     const existingUser = await prisma.user.findFirst({ where: {email: user.email!} });
-      //     if (!existingUser) {
-
-      //       await prisma.user.create({
-      //           data: {
-      //             id: nanoid() + "",
-      //             email: user.email!
-      //           },
-      //         });
-      //       return true;
-      //     }
-      //     return true;
-      //   } catch (err) {
-      //     console.log("Error saving user", err);
-      //     return false;
-      //   }
-      // }
-
-      // if (account?.provider == "google") {
-
-      //   try {
-      //     const existingUser = await prisma.user.findFirst({where: { email: user.email! }});
-      //     if (!existingUser) {
-      //       await prisma.user.create({
-      //           data: {
-      //             id: nanoid() + "",
-      //             email: user.email!
-      //           },
-      //         });
-
-      //       return true;
-      //     }
-      //     return true;
-      //   } catch (err) {
-      //     console.log("Error saving user", err);
-      //     return false;
-      //   }
-      // }
+      // Tu peux réactiver ton code Github/Google ici si nécessaire
     },
   },
+  session: { strategy: "jwt" },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
-export const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+// ✅ Next.js App Router attend uniquement ça
 export { handler as GET, handler as POST };

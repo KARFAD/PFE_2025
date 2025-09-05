@@ -145,7 +145,7 @@ const LoginPage = () => {
               </div>
             </form>
 
-            <div>
+            {/* <div>
               <div className="relative mt-10">
                 <div
                   className="absolute inset-0 flex items-center"
@@ -199,7 +199,7 @@ const LoginPage = () => {
               <p className="text-red-600 text-center text-[16px] my-4">
                 {error && error}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
