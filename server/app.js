@@ -35,6 +35,9 @@ app.use("/api/orders", orderRouter);
 app.use('/api/order-product', orderProductRouter);
 app.use("/api/slugs", slugRouter);
 app.use("/api/wishlist", wishlistRouter);
+app.get("/", (req, res) => {
+  res.send("Hello from Express on Vercel!");
+});
 
 
 const PORT = process.env.PORT || 3001;
