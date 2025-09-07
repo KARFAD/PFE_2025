@@ -25,7 +25,6 @@ This project is a full-stack eCommerce application for electronics, featuring an
 
 - Next.js
 - Node.js
-- MongoDB
 
 ## License
 
